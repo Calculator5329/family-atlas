@@ -1,0 +1,3065 @@
+/* Design tokens. docs/taste.md is the contract these implement.
+   No gradients, no glassmorphism, no rounded-everything: radii top out
+   at 3px and exist only to keep hairlines from looking chipped. */
+
+:root {
+  --ink-000: #0c0d0f;
+  --ink-050: #111316;
+  --ink-100: #16181c;
+  --ink-150: #1c1f24;
+  --ink-200: #23272e;
+  --ink-300: #2e333b;
+  --ink-400: #3d434d;
+
+  --text-000: #f2f0ec;
+  --text-100: #d6d3cc;
+  --text-200: #a29d94;
+  --text-300: #75706a;
+  /* One step past --text-300, for the counts and sub-labels the atlas
+     leans on. It was being used before it existed, and an undefined
+     custom property does not fall back to grey, it falls back to
+     whatever the parent was saying. */
+  --text-400: #575450;
+
+  --rule: #262a31;
+  --rule-strong: #343a43;
+
+  --accent: #c8a25c;
+  --accent-dim: #8a6f3f;
+
+  --line-a: #c08a3e;
+  --line-b: #4e8fa8;
+  --line-c: #7fa05a;
+  --line-d: #a9636b;
+  --lineage-none: #5a6069;
+
+  --grade-a: #7fa05a;
+  --grade-b: #c8a25c;
+  --grade-c: #b07a55;
+  --grade-myth: #a9636b;
+
+  --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Source Serif 4",
+    Georgia, serif;
+  --sans: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto,
+    sans-serif;
+  --mono: "JetBrains Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  --measure: 74ch;
+  --rail: 300px;
+  --topbar: 52px;
+
+  --r: 3px;
+  --inset: inset 0 0 0 1px rgb(255 255 255 / 10%);
+}
+
+:root[data-theme="light"] {
+  --ink-000: #f7f5f1;
+  --ink-050: #f2efe9;
+  --ink-100: #ebe7e0;
+  --ink-150: #e4dfd6;
+  --ink-200: #dbd5ca;
+  --ink-300: #cdc6b8;
+  --ink-400: #b5ac9c;
+
+  --text-000: #16181c;
+  --text-100: #2e333b;
+  --text-200: #5c6068;
+  --text-300: #85888e;
+  --text-400: #9b9da2;
+
+  --rule: #ddd7cb;
+  --rule-strong: #c6bfaf;
+  --accent: #8a6a2c;
+  --accent-dim: #a08a5e;
+  --inset: inset 0 0 0 1px rgb(0 0 0 / 10%);
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  background: var(--ink-000);
+  color: var(--text-100);
+  font-family: var(--sans);
+  font-size: 14px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  color: var(--text-000);
+  font-weight: 560;
+  letter-spacing: -0.012em;
+  margin: 0;
+}
+
+button {
+  font: inherit;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+::selection {
+  background: var(--accent-dim);
+  color: var(--ink-000);
+}
+
+/* ---------- shell ---------- */
+
+.app {
+  min-height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  height: var(--topbar);
+  flex: none;
+  display: flex;
+  align-items: center;
+  gap: 28px;
+  padding: 0 20px;
+  background: var(--ink-050);
+  border-bottom: 1px solid var(--rule);
+}
+
+.topbar__mark {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  margin-right: 4px;
+}
+
+.topbar__mark strong {
+  color: var(--text-000);
+  font-weight: 600;
+  font-size: 13px;
+  letter-spacing: 0.02em;
+}
+
+.topbar__mark span {
+  color: var(--text-300);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.topbar__nav {
+  display: flex;
+  gap: 2px;
+}
+
+.topbar__nav a {
+  padding: 5px 10px;
+  border-radius: var(--r);
+  color: var(--text-200);
+  font-size: 13px;
+}
+
+.topbar__nav a:hover {
+  color: var(--text-000);
+  background: var(--ink-150);
+}
+
+.topbar__nav a[aria-current="page"] {
+  color: var(--text-000);
+  background: var(--ink-200);
+}
+
+.topbar__right {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.modeswitch {
+  display: flex;
+  padding: 2px;
+  background: var(--ink-150);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+}
+
+.modeswitch button {
+  padding: 3px 10px;
+  font-size: 12px;
+  color: var(--text-300);
+  border-radius: 2px;
+}
+
+.modeswitch button[data-on="true"] {
+  color: var(--text-000);
+  background: var(--ink-300);
+}
+
+.iconbtn {
+  width: 28px;
+  height: 28px;
+  display: grid;
+  place-items: center;
+  color: var(--text-300);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+}
+
+.iconbtn:hover {
+  color: var(--text-000);
+  border-color: var(--rule-strong);
+}
+
+.main {
+  flex: 1 1 auto;
+  min-height: 0;
+}
+
+/* ---------- primitives ---------- */
+
+.page {
+  max-width: 1160px;
+  margin: 0 auto;
+  padding: 40px 24px 96px;
+}
+
+.page--narrow {
+  max-width: 940px;
+}
+
+.eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--text-300);
+}
+
+.dim {
+  color: var(--text-300);
+}
+
+.rule {
+  height: 1px;
+  background: var(--rule);
+  border: 0;
+  margin: 28px 0;
+}
+
+.chip {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  padding: 1px 7px;
+  font-size: 11px;
+  line-height: 1.7;
+  color: var(--text-200);
+  background: var(--ink-150);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  white-space: nowrap;
+}
+
+.chip--person {
+  color: var(--text-100);
+}
+
+.chip--person:hover {
+  color: var(--text-000);
+  border-color: var(--rule-strong);
+  background: var(--ink-200);
+}
+
+.chip__dot {
+  width: 6px;
+  height: 6px;
+  flex: none;
+  border-radius: 50%;
+  background: var(--lineage-none);
+}
+
+.grade {
+  display: inline-block;
+  width: 15px;
+  height: 15px;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  line-height: 15px;
+  text-align: center;
+  border-radius: 2px;
+  color: var(--ink-000);
+  font-weight: 600;
+}
+
+.grade[data-g="A"] {
+  background: var(--grade-a);
+}
+.grade[data-g="B"] {
+  background: var(--grade-b);
+}
+.grade[data-g="C"] {
+  background: var(--grade-c);
+}
+.grade[data-g="myth"] {
+  background: var(--grade-myth);
+}
+
+.prose {
+  font-family: var(--serif);
+  font-size: 16.5px;
+  line-height: 1.68;
+  color: var(--text-100);
+  max-width: var(--measure);
+}
+
+.prose p {
+  margin: 0 0 1.05em;
+}
+
+.prose strong {
+  color: var(--text-000);
+  font-weight: 600;
+}
+
+.prose em {
+  color: var(--text-100);
+}
+
+.prose h3 {
+  font-family: var(--sans);
+  font-size: 13px;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--text-200);
+  margin: 2em 0 0.7em;
+}
+
+.prose blockquote {
+  margin: 1.4em 0;
+  padding-left: 18px;
+  border-left: 2px solid var(--accent-dim);
+  color: var(--text-200);
+  font-style: italic;
+}
+
+.prose ul,
+.prose ol {
+  padding-left: 1.2em;
+}
+
+.prose li {
+  margin-bottom: 0.4em;
+}
+
+.prose a {
+  color: var(--text-000);
+  border-bottom: 1px solid var(--accent-dim);
+}
+
+.prose code {
+  font-family: var(--mono);
+  font-size: 0.86em;
+  background: var(--ink-150);
+  padding: 1px 4px;
+  border-radius: 2px;
+}
+
+.cited {
+  border-bottom: 1px dotted var(--rule-strong);
+}
+
+/* ---------- chronicle ---------- */
+
+.hero {
+  padding: 56px 0 40px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.hero h1 {
+  font-family: var(--serif);
+  font-size: 42px;
+  line-height: 1.12;
+  letter-spacing: -0.02em;
+  margin: 12px 0 16px;
+  max-width: 18ch;
+}
+
+.hero p {
+  max-width: 58ch;
+  font-size: 15px;
+  color: var(--text-200);
+  margin: 0;
+}
+
+.stats {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0;
+  margin-top: 32px;
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+
+.stats > div {
+  flex: 1 1 150px;
+  padding: 14px 16px;
+  border-right: 1px solid var(--rule);
+  background: var(--ink-050);
+}
+
+.stats > div:last-child {
+  border-right: 0;
+}
+
+.stats b {
+  display: block;
+  font-size: 21px;
+  font-weight: 500;
+  color: var(--text-000);
+  font-variant-numeric: tabular-nums;
+}
+
+.stats span {
+  font-size: 11.5px;
+  color: var(--text-300);
+}
+
+.partline {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin: 52px 0 20px;
+}
+
+.partline h2 {
+  font-size: 12px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-200);
+  flex: none;
+}
+
+.partline::after {
+  content: "";
+  flex: 1;
+  height: 1px;
+  background: var(--rule);
+}
+
+.storygrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+
+.storycard {
+  display: block;
+  padding: 20px 22px 18px;
+  background: var(--ink-050);
+  border-left: 2px solid transparent;
+  transition: background 90ms linear;
+}
+
+.storycard:hover {
+  background: var(--ink-100);
+}
+
+.storycard__no {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-300);
+}
+
+.storycard h3 {
+  font-family: var(--serif);
+  font-size: 19px;
+  line-height: 1.25;
+  margin: 7px 0 9px;
+}
+
+.storycard p {
+  margin: 0;
+  font-size: 13px;
+  color: var(--text-200);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.storycard__foot {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 14px;
+  font-size: 11px;
+  color: var(--text-300);
+}
+
+.storyhead {
+  padding: 24px 0 26px;
+  border-bottom: 1px solid var(--rule);
+  margin-bottom: 30px;
+}
+
+.storyhead h1 {
+  font-family: var(--serif);
+  font-size: 34px;
+  line-height: 1.16;
+  letter-spacing: -0.018em;
+  margin: 10px 0 14px;
+  max-width: 22ch;
+}
+
+.peoplerow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.backlink {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12px;
+  color: var(--text-300);
+}
+
+.backlink:hover {
+  color: var(--text-000);
+}
+
+.sourcenote {
+  margin-top: 40px;
+  padding: 14px 16px;
+  background: var(--ink-050);
+  border: 1px solid var(--rule);
+  border-left: 2px solid var(--accent-dim);
+  border-radius: var(--r);
+  font-size: 12.5px;
+  color: var(--text-200);
+}
+
+.storynav {
+  display: flex;
+  justify-content: space-between;
+  gap: 16px;
+  margin-top: 48px;
+  padding-top: 22px;
+  border-top: 1px solid var(--rule);
+  font-size: 13px;
+}
+
+.storynav a {
+  max-width: 46%;
+  color: var(--text-200);
+}
+
+.storynav a:hover {
+  color: var(--text-000);
+}
+
+.storynav span {
+  display: block;
+  font-size: 11px;
+  color: var(--text-300);
+  margin-bottom: 3px;
+}
+
+/* ---------- person ---------- */
+
+.person {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) var(--rail);
+  gap: 40px;
+  align-items: start;
+}
+
+.personhead {
+  border-bottom: 1px solid var(--rule);
+  padding-bottom: 20px;
+  margin-bottom: 26px;
+}
+
+.personhead h1 {
+  font-family: var(--serif);
+  font-size: 32px;
+  line-height: 1.15;
+  margin: 8px 0 8px;
+}
+
+.personhead__life {
+  font-size: 14px;
+  color: var(--text-200);
+  font-variant-numeric: tabular-nums;
+}
+
+.facts {
+  display: grid;
+  grid-template-columns: 88px minmax(0, 1fr);
+  gap: 7px 16px;
+  font-size: 13.5px;
+}
+
+.facts dt {
+  color: var(--text-300);
+  font-size: 12px;
+  padding-top: 1px;
+}
+
+.facts dd {
+  margin: 0;
+  color: var(--text-100);
+}
+
+.section {
+  margin-top: 34px;
+}
+
+.section > h2 {
+  font-size: 11.5px;
+  letter-spacing: 0.13em;
+  text-transform: uppercase;
+  color: var(--text-300);
+  margin-bottom: 14px;
+}
+
+.timeline {
+  border-left: 1px solid var(--rule);
+  padding-left: 20px;
+  margin-left: 4px;
+}
+
+.timeline li {
+  position: relative;
+  list-style: none;
+  padding-bottom: 16px;
+}
+
+.timeline li::before {
+  content: "";
+  position: absolute;
+  left: -25px;
+  top: 6px;
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: var(--ink-400);
+  box-shadow: 0 0 0 3px var(--ink-000);
+}
+
+.timeline b {
+  font-family: var(--mono);
+  font-size: 11.5px;
+  color: var(--accent);
+  font-weight: 500;
+  margin-right: 8px;
+}
+
+.timeline em {
+  font-style: normal;
+  color: var(--text-000);
+}
+
+.timeline small {
+  display: block;
+  color: var(--text-300);
+  font-size: 12px;
+}
+
+.rail {
+  position: sticky;
+  top: calc(var(--topbar) + 24px);
+  display: flex;
+  flex-direction: column;
+  gap: 22px;
+}
+
+.railbox {
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  background: var(--ink-050);
+  padding: 14px 15px;
+}
+
+.railbox h3 {
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--text-300);
+  margin-bottom: 10px;
+}
+
+.relrow {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 10px;
+  padding: 4px 0;
+  font-size: 13px;
+  color: var(--text-100);
+  border-bottom: 1px solid var(--rule);
+}
+
+.relrow:last-child {
+  border-bottom: 0;
+}
+
+.relrow:hover {
+  color: var(--text-000);
+}
+
+.relrow small {
+  color: var(--text-300);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  flex: none;
+}
+
+.notecard {
+  padding: 12px 14px;
+  background: var(--ink-050);
+  border: 1px solid var(--rule);
+  border-left: 2px solid var(--rule-strong);
+  border-radius: var(--r);
+  margin-bottom: 10px;
+  font-size: 13px;
+  color: var(--text-100);
+}
+
+.notecard[data-lead="true"] {
+  border-left-color: var(--accent);
+}
+
+.notecard__tag {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--text-300);
+  display: block;
+  margin-bottom: 5px;
+}
+
+.fenced {
+  padding: 16px 18px;
+  border: 1px dashed var(--rule-strong);
+  border-radius: var(--r);
+  color: var(--text-200);
+  font-size: 13px;
+  max-width: 58ch;
+}
+
+/* Attachments that actually arrived. Deliberately not a uniform square
+   grid: a portrait, a census page and a headstone photograph have nothing
+   like the same aspect ratio, and cropping them to match loses the part a
+   reader wants. Fixed row height, natural width. */
+.mediarow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+/* The figure is as wide as its picture, or as wide as its caption wants
+   to be, whichever is more, up to a readable measure. Without the floor a
+   small photograph squeezes its caption into a four-word column. */
+.mediarow figure {
+  margin: 0;
+  max-width: 44ch;
+}
+
+.mediarow button {
+  display: block;
+  padding: 0;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--r);
+  background: var(--ink-050);
+  cursor: zoom-in;
+  line-height: 0;
+}
+
+.mediarow button:hover {
+  border-color: var(--accent-dim);
+}
+
+.mediarow img {
+  display: block;
+  height: 168px;
+  width: auto;
+  object-fit: contain;
+}
+
+.mediarow figcaption {
+  margin-top: 5px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--text-300);
+}
+
+.lightbox {
+  position: fixed;
+  inset: 0;
+  /* It is a <figure>, and a figure's default 1em/40px margin insets a
+     fixed overlay off the viewport corner. */
+  margin: 0;
+  z-index: 60;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  padding: 32px;
+  background: rgb(6 7 8 / 92%);
+  cursor: zoom-out;
+}
+
+.lightbox img {
+  max-width: min(1100px, 100%);
+  max-height: 78vh;
+  object-fit: contain;
+  border: 1px solid var(--rule-strong);
+}
+
+.lightbox figcaption {
+  max-width: 70ch;
+  text-align: center;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-200);
+}
+
+.media-missing {
+  display: flex;
+  /* Some attachments carry a paragraph of provenance, so the icon sits at
+     the first line rather than floating in the middle of the block. */
+  align-items: flex-start;
+  gap: 10px;
+  line-height: 1.55;
+  padding: 10px 12px;
+  border: 1px dashed var(--rule-strong);
+  border-radius: var(--r);
+  font-size: 12.5px;
+  color: var(--text-300);
+  margin-bottom: 8px;
+}
+
+/* ---------- search ---------- */
+
+.searchwrap {
+  position: relative;
+}
+
+.searchinput {
+  width: 240px;
+  padding: 5px 10px;
+  font: inherit;
+  font-size: 13px;
+  color: var(--text-000);
+  background: var(--ink-150);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  outline: none;
+}
+
+.searchinput:focus {
+  border-color: var(--rule-strong);
+}
+
+.searchinput::placeholder {
+  color: var(--text-300);
+}
+
+.results {
+  position: absolute;
+  top: calc(100% + 6px);
+  right: 0;
+  width: 340px;
+  max-height: 420px;
+  overflow-y: auto;
+  background: var(--ink-100);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--r);
+  box-shadow: 0 12px 32px rgb(0 0 0 / 45%);
+  z-index: 60;
+}
+
+.results a {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 10px;
+  padding: 7px 12px;
+  font-size: 13px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.results a:last-child {
+  border-bottom: 0;
+}
+
+.results a:hover,
+.results a[data-active="true"] {
+  background: var(--ink-200);
+  color: var(--text-000);
+}
+
+.results small {
+  color: var(--text-300);
+  font-family: var(--mono);
+  font-size: 10.5px;
+  flex: none;
+}
+
+.results__empty {
+  padding: 14px 12px;
+  font-size: 12.5px;
+  color: var(--text-300);
+}
+
+/* ---------- tree ---------- */
+
+.treewrap {
+  position: relative;
+  height: calc(100vh - var(--topbar));
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 340px;
+}
+
+.treecanvas {
+  position: relative;
+  overflow: hidden;
+  background: var(--ink-000);
+  cursor: grab;
+}
+
+.treecanvas:active {
+  cursor: grabbing;
+}
+
+.treecanvas svg {
+  display: block;
+}
+
+.node rect.box {
+  fill: var(--ink-100);
+  stroke: var(--rule-strong);
+  stroke-width: 1;
+}
+
+.node:hover rect.box {
+  fill: var(--ink-200);
+}
+
+.node[data-sel="true"] rect.box {
+  stroke: var(--text-000);
+  stroke-width: 1.5;
+}
+
+.node text {
+  fill: var(--text-100);
+  font-size: 11px;
+  font-family: var(--sans);
+}
+
+.node .yrs {
+  fill: var(--text-300);
+  font-family: var(--mono);
+  font-size: 9.5px;
+}
+
+.node[data-living="true"] rect.box {
+  stroke-dasharray: 3 2;
+}
+
+.link {
+  fill: none;
+  stroke: var(--rule-strong);
+  stroke-width: 1;
+}
+
+.treepanel {
+  border-left: 1px solid var(--rule);
+  background: var(--ink-050);
+  overflow-y: auto;
+  padding: 20px 20px 60px;
+}
+
+.treetools {
+  position: absolute;
+  left: 16px;
+  top: 16px;
+  z-index: 5;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  align-items: flex-start;
+}
+
+.toolgroup {
+  display: flex;
+  background: var(--ink-100);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+
+.toolgroup button {
+  padding: 5px 11px;
+  font-size: 12px;
+  color: var(--text-200);
+  border-right: 1px solid var(--rule);
+}
+
+.toolgroup button:last-child {
+  border-right: 0;
+}
+
+.toolgroup button:hover {
+  color: var(--text-000);
+  background: var(--ink-200);
+}
+
+.toolgroup button[data-on="true"] {
+  color: var(--text-000);
+  background: var(--ink-300);
+}
+
+.legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px 16px;
+  padding: 8px 11px;
+  background: var(--ink-100);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  font-size: 11.5px;
+  color: var(--text-200);
+}
+
+.legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.legend i {
+  width: 9px;
+  height: 9px;
+  border-radius: 2px;
+  display: inline-block;
+}
+
+/* ---------- film ---------- */
+
+.film {
+  position: relative;
+  height: calc(100vh - var(--topbar));
+  overflow: hidden;
+  background: #080a0c;
+}
+
+.film__map {
+  position: absolute;
+  inset: 0;
+}
+
+.film__caption {
+  position: absolute;
+  left: 48px;
+  bottom: 108px;
+  width: min(460px, 40vw);
+  z-index: 10;
+}
+
+.film__caption .eyebrow {
+  color: var(--accent);
+}
+
+.film__caption h2 {
+  font-family: var(--serif);
+  font-size: 30px;
+  line-height: 1.15;
+  margin: 8px 0 12px;
+}
+
+.film__caption p {
+  font-family: var(--serif);
+  font-size: 15.5px;
+  line-height: 1.6;
+  color: var(--text-100);
+  margin: 0 0 14px;
+}
+
+.film__year {
+  position: absolute;
+  right: 48px;
+  top: 40px;
+  font-family: var(--mono);
+  font-size: 46px;
+  font-variant-numeric: tabular-nums;
+  color: var(--text-000);
+  letter-spacing: -0.02em;
+  z-index: 10;
+}
+
+/* What the place was called then, under the year. Same corner, quieter
+   voice: the modern basemap labels have bowed out by settle zoom, and this
+   is the honest name that replaces them. */
+.film__era {
+  position: absolute;
+  right: 48px;
+  top: 96px;
+  font-size: 11px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--text-300);
+  z-index: 10;
+  text-align: right;
+  max-width: 260px;
+}
+
+.film__bar {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 20;
+  display: flex;
+  align-items: center;
+  gap: 18px;
+  padding: 14px 24px;
+  background: var(--ink-050);
+  border-top: 1px solid var(--rule);
+}
+
+.film__scrub {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  height: 34px;
+  gap: 0;
+}
+
+.film__tick {
+  flex: 1;
+  height: 100%;
+  position: relative;
+  display: flex;
+  align-items: center;
+}
+
+.film__tick::before {
+  content: "";
+  display: block;
+  width: 100%;
+  height: 2px;
+  background: var(--ink-300);
+}
+
+.film__tick[data-past="true"]::before {
+  background: var(--accent-dim);
+}
+
+.film__tick[data-on="true"]::before {
+  background: var(--accent);
+  height: 4px;
+}
+
+.film__tick span {
+  position: absolute;
+  top: 0;
+  left: 0;
+  font-family: var(--mono);
+  font-size: 9.5px;
+  color: var(--text-300);
+}
+
+.film__tick:hover span {
+  color: var(--text-000);
+}
+
+.playbtn {
+  width: 34px;
+  height: 34px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--r);
+  color: var(--text-000);
+}
+
+.playbtn:hover {
+  background: var(--ink-200);
+}
+
+.fadein {
+  animation: fadein 520ms ease-out both;
+}
+
+@keyframes fadein {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .fadein {
+    animation: none;
+  }
+}
+
+/* ---------- responsive ---------- */
+
+@media (max-width: 900px) {
+  .person {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .rail {
+    position: static;
+  }
+  .treewrap {
+    grid-template-columns: minmax(0, 1fr);
+  }
+  .treepanel {
+    display: none;
+  }
+  .film__caption {
+    left: 20px;
+    right: 20px;
+    width: auto;
+    bottom: 92px;
+  }
+  .film__year {
+    right: 20px;
+    font-size: 30px;
+  }
+  .hero h1 {
+    font-size: 32px;
+  }
+}
+
+/* ---------- variant bar (throwaway: dies when Ethan picks a layout) ---------- */
+
+.variantbar {
+  position: fixed;
+  left: 50%;
+  bottom: 22px;
+  transform: translateX(-50%);
+  z-index: 50;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 9px 7px 14px;
+  background: var(--ink-100);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--r);
+  box-shadow: 0 10px 30px rgb(0 0 0 / 45%);
+}
+
+.variantbar .eyebrow {
+  margin-right: 6px;
+}
+
+.variantbar button {
+  padding: 4px 11px;
+  font-size: 12.5px;
+  color: var(--text-200);
+  border: 1px solid transparent;
+  border-radius: 2px;
+}
+
+.variantbar button:hover {
+  color: var(--text-000);
+  background: var(--ink-200);
+}
+
+.variantbar button[data-on="true"] {
+  color: var(--text-000);
+  background: var(--ink-300);
+  border-color: var(--rule-strong);
+}
+
+/* ---- kinship lines ----------------------------------------------------- */
+
+.kinline {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  margin: 2px 0 18px;
+  font-size: 13.5px;
+  color: var(--text-200);
+}
+.kinline__mark {
+  width: 7px;
+  height: 7px;
+  flex: none;
+  align-self: center;
+  border-radius: 50%;
+  background: var(--accent);
+}
+.storycard__through {
+  margin-top: 10px;
+  font-size: 11.5px;
+  font-family: var(--mono);
+  color: var(--accent);
+  letter-spacing: 0.02em;
+}
+
+/* ---- original-record quotes -------------------------------------------- */
+
+.quotes {
+  margin-top: 8px;
+}
+.quoteblock {
+  margin: 26px 0 0;
+  padding: 24px 26px 20px;
+  background: var(--ink-050);
+  border: 1px solid var(--rule);
+  border-left: 2px solid var(--accent);
+  border-radius: var(--r);
+}
+.quoteblock blockquote {
+  margin: 0;
+  font-family: var(--serif);
+  font-size: 21px;
+  line-height: 1.45;
+  color: var(--text-000);
+}
+.quoteblock blockquote::before {
+  content: "\201C";
+  color: var(--text-300);
+  margin-right: 2px;
+}
+.quoteblock blockquote::after {
+  content: "\201D";
+  color: var(--text-300);
+  margin-left: 2px;
+}
+.quoteblock figcaption {
+  margin-top: 14px;
+  display: grid;
+  gap: 4px;
+}
+.quoteblock__speaker {
+  font-size: 13px;
+  color: var(--text-100, var(--text-000));
+}
+.quoteblock__speaker::before {
+  content: "\2014 ";
+  color: var(--text-300);
+}
+.quoteblock__source {
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-300);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.quoteblock__context {
+  margin-top: 6px;
+  font-size: 13px;
+  line-height: 1.55;
+  color: var(--text-200);
+  max-width: 62ch;
+}
+
+/* ---- period-language glossary ------------------------------------------ */
+
+.gloss {
+  text-decoration: underline dotted;
+  text-decoration-color: var(--text-300);
+  text-underline-offset: 3px;
+  cursor: help;
+}
+.glossarybox {
+  margin-top: 34px;
+  padding: 20px 24px;
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  background: var(--ink-050);
+}
+.glossarybox dl {
+  margin: 12px 0 0;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  gap: 12px 28px;
+}
+.glossarybox dt {
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 14.5px;
+  color: var(--text-000);
+}
+.glossarybox dd {
+  margin: 3px 0 0;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-200);
+}
+.relrow--btn {
+  width: 100%;
+  background: none;
+  border: none;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  text-align: left;
+}
+.film__kin {
+  margin: 2px 0 10px;
+  font-size: 12.5px;
+  color: var(--accent);
+  letter-spacing: 0.02em;
+}
+/* An unproved connection is stated, not coloured like a proved one. */
+.film__kin--open {
+  color: var(--text-300);
+}
+
+/* ---- atlas -------------------------------------------------------------- */
+
+.atlas__title {
+  font-family: var(--serif);
+  font-size: 19px;
+  line-height: 1.2;
+  color: var(--text-000);
+  margin: 4px 0 3px;
+}
+.atlas__legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+.atlas__legend span {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 11.5px;
+  color: var(--text-200);
+}
+.atlas__legend--shapes {
+  margin-top: 8px;
+  padding-top: 8px;
+  gap: 6px 14px;
+  border-top: 1px solid var(--rule);
+}
+.atlas__glyph {
+  display: block;
+  image-rendering: auto;
+}
+
+/* Filter chips. Three groups asking three questions of one pile — what
+   happened, whose line, which years — and every one of them is a switch
+   rather than a mode, because the interesting views are combinations:
+   burials on the Wiersma line before 1900. */
+.atlas__layers {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 12px;
+}
+.atlas__layer,
+.atlas__key {
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  padding: 3px 9px;
+  font: inherit;
+  font-size: 11.5px;
+  line-height: 1.7;
+  text-align: left;
+  color: var(--text-300);
+  background: var(--ink-150);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  cursor: pointer;
+}
+.atlas__layer:hover,
+.atlas__key:hover {
+  color: var(--text-100);
+  border-color: var(--rule-strong);
+}
+.atlas__layer[aria-pressed="true"],
+.atlas__key[aria-pressed="true"] {
+  color: var(--text-000);
+  border-color: var(--rule-strong);
+}
+/* Switched off has to read as switched off from across the room, and the
+   swatch is what the eye scans, so the swatch is what fades. The event
+   glyphs are the same control wearing a different mark, so they fade with
+   it, and the label goes with them — with seven chips in a column, one
+   faint dot was not enough of a difference to see. */
+.atlas__key[aria-pressed="false"] .chip__dot,
+.atlas__key[aria-pressed="false"] .atlas__glyph {
+  opacity: 0.22;
+}
+.atlas__key[aria-pressed="false"] b,
+.atlas__key[aria-pressed="false"] em {
+  opacity: 0.45;
+}
+.atlas__check {
+  width: 9px;
+  height: 9px;
+  flex: none;
+  border: 1px solid var(--rule-strong);
+  border-radius: 1px;
+}
+.atlas__layer[aria-pressed="true"] .atlas__check {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.atlas__bar {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.atlas__bar input[type="range"] {
+  flex: 1;
+  accent-color: var(--accent);
+}
+.atlas__yearlabel {
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-000);
+  /* Wide enough for "1755-1780", which is what the window mode puts here;
+     at the old 64px the label shoved the slider a few pixels left every
+     time the window came on. */
+  min-width: 82px;
+}
+.atlas__play {
+  flex: none;
+  width: 26px;
+  height: 22px;
+  padding: 0;
+  font-size: 9px;
+  line-height: 1;
+  color: var(--text-100);
+  background: var(--ink-150);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  cursor: pointer;
+}
+.atlas__play:hover {
+  color: var(--text-000);
+  border-color: var(--rule-strong);
+}
+.atlas__play[aria-pressed="true"] {
+  color: var(--accent);
+  border-color: var(--accent-dim);
+}
+/* Two lines per swatch. Ethan's ask, 2026-08-21: a legend that reads
+   a great-grandmother's full name names a person he has never met and tells him nothing
+   about which half of which grandparent she is. So the strong line is the
+   surname the line carries — "The Stone line" — and the quiet one places
+   it: whose side, which great-grandparent, through which grandparent. */
+.atlas__legend--branches {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+}
+.atlas__key--two {
+  align-items: flex-start;
+  padding: 2px 7px;
+  gap: 6px;
+  min-width: 0;
+}
+.atlas__key--two .chip__dot {
+  margin-top: 5px;
+}
+.atlas__key--two span {
+  display: grid;
+  grid-template-columns: 1fr auto;
+  column-gap: 6px;
+  gap: 1px;
+  /* One line each. The full wording — "Mom's side · Great-Grandma Willis ·
+     through Grandpa Smith" — is on the chip's title, because wrapped
+     across three lines it made a nine-chip legend 567px tall and pushed
+     the panel into a scroll it did not need. */
+  min-width: 0;
+}
+.atlas__key--two b,
+.atlas__key--two em {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.atlas__key--two b {
+  grid-column: 1 / -1;
+  font-weight: 550;
+  color: inherit;
+}
+.atlas__key--two em {
+  font-style: normal;
+  font-size: 10.5px;
+  line-height: 1.25;
+  color: var(--text-300);
+}
+
+/* A short window is the one case the legend cannot fit at full height, and
+   a hidden scrollbar over a map is worse than a quieter legend. Under
+   about 820px the branch chips drop to one line each — the line's name,
+   which is the thing being switched — and the great-grandparent they are
+   named for stays on the title. That is 70px, which is the difference
+   between fitting and not on a 720p screen. */
+@media (max-height: 820px) {
+  .atlas__key--two em:not(.atlas__count) {
+    display: none;
+  }
+  .atlas__key--two {
+    align-items: center;
+  }
+  .atlas__key--two .chip__dot {
+    margin-top: 0;
+  }
+  .atlas__key--two span {
+    grid-template-columns: 1fr auto;
+  }
+  .atlas__key--two b {
+    grid-column: 1;
+  }
+  .atlas__legend--branches .atlas__count {
+    align-self: center;
+  }
+  .atlas__panelhead {
+    padding: 9px 14px;
+  }
+  .atlas__legend--shapes,
+  .atlas__legend--branches {
+    margin-top: 6px;
+  }
+}
+/* Shorter still, and the panel's own title is the last thing to give: the
+   eyebrow says "the atlas" on the page the nav bar already calls Atlas. */
+@media (max-height: 700px) {
+  .atlas__panel .eyebrow {
+    display: none;
+  }
+  .atlas__title {
+    font-size: 17px;
+  }
+  .atlas__filters {
+    padding-bottom: 8px;
+  }
+}
+
+/* ---- the atlas, playing ------------------------------------------------
+
+   Play is a film, so the chart's furniture goes away and the film's comes
+   back: a year in the corner, a caption bottom left, a title card between
+   chapters. Nothing here is a panel over the map with a blur behind it —
+   the map is the picture and the words sit on it, the same as the film. */
+.atlas__card {
+  position: absolute;
+  left: 48px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: min(520px, 46vw);
+  z-index: 12;
+  pointer-events: none;
+}
+.atlas__card h2 {
+  font-family: var(--serif);
+  font-size: 40px;
+  line-height: 1.08;
+  margin: 10px 0 10px;
+  color: var(--text-000);
+}
+.atlas__card p {
+  font-family: var(--serif);
+  font-size: 15px;
+  line-height: 1.6;
+  margin: 0 0 6px;
+  color: var(--text-100);
+}
+.atlas__card .eyebrow {
+  color: var(--accent);
+}
+
+.atlas__caption {
+  pointer-events: none;
+  width: min(430px, 38vw);
+}
+.atlas__caption h2 {
+  margin: 6px 0 6px;
+  font-size: 26px;
+}
+.atlas__rel {
+  font-family: var(--serif) !important;
+  font-size: 14px !important;
+  color: var(--text-200) !important;
+  margin: 0 0 10px !important;
+}
+
+/* The itinerary. Every leg the record attests, in order, and the ones
+   already flown are lit — so a two-stop life reads as two stops and a
+   nine-stop one reads as a life spent moving. */
+.atlas__legs {
+  display: grid;
+  gap: 3px;
+  border-left: 2px solid var(--rule);
+  padding-left: 10px;
+  margin-bottom: 10px;
+}
+.atlas__leg {
+  display: flex;
+  align-items: baseline;
+  gap: 9px;
+  font-size: 12.5px;
+  color: var(--text-300);
+  opacity: 0.5;
+}
+.atlas__leg--on {
+  opacity: 1;
+  color: var(--text-000);
+}
+.atlas__legyears {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--text-300);
+  min-width: 66px;
+  flex: none;
+}
+.atlas__legmiles {
+  font-family: var(--mono);
+  font-size: 10.5px;
+  color: var(--text-300);
+  margin-left: auto;
+  flex: none;
+}
+.atlas__why {
+  font-family: var(--sans) !important;
+  font-size: 11.5px !important;
+  line-height: 1.55 !important;
+  margin: 0 !important;
+}
+
+/* The chapter rail, where the record view keeps its legend. One button per
+   line, so a viewer who wants the Stone crossing does not have to sit
+   through the Peltons to reach it. */
+.atlas__chapters {
+  position: absolute;
+  left: 48px;
+  top: 32px;
+  z-index: 11;
+  display: grid;
+  justify-items: start;
+  gap: 4px;
+  max-width: 260px;
+}
+
+.atlas__tip {
+  position: absolute;
+  z-index: 20;
+  pointer-events: none;
+  display: grid;
+  gap: 2px;
+  padding: 8px 11px;
+  background: var(--ink-050);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  font-size: 12px;
+  color: var(--text-200);
+  max-width: 260px;
+}
+.atlas__tip b {
+  color: var(--text-000);
+  font-weight: 550;
+}
+/* The picture sidebar. A real panel rather than three floating cards: the
+   archive now runs to a dozen images at some stops, and a column that
+   grows with its contents runs off the bottom of the screen and puts
+   captions over the map's own labels. So it is a fixed rail that scrolls
+   itself, and every thumbnail is cropped to one shape, because a tall
+   document scan beside a landscape photograph was what broke the
+   proportions. The full frame is one click away in the lightbox. */
+.film__portraits {
+  position: absolute;
+  right: 40px;
+  top: 132px;
+  bottom: 108px;
+  z-index: 10;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  width: 232px;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding-right: 6px;
+  opacity: 0;
+  transition: none; /* opacity is driven by the film loop, with the caption */
+  scrollbar-width: thin;
+  scrollbar-color: var(--rule) transparent;
+}
+.film__portraits::-webkit-scrollbar {
+  width: 6px;
+}
+.film__portraits::-webkit-scrollbar-thumb {
+  background: var(--rule);
+  border-radius: 3px;
+}
+.film__portraits figure {
+  margin: 0;
+  flex: 0 0 auto;
+  background: var(--ink-050);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+.film__portraits img {
+  display: block;
+  width: 100%;
+  height: 132px;
+  object-fit: cover;
+  object-position: center;
+  background: var(--ink-100);
+}
+.film__portraits figcaption {
+  padding: 7px 10px;
+  font-size: 11px;
+  line-height: 1.35;
+  color: var(--text-200);
+  display: -webkit-box;
+  -webkit-line-clamp: 3;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+.film__portraits__count {
+  flex: 0 0 auto;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--text-300);
+  padding-bottom: 2px;
+}
+.link[data-thread="true"] {
+  stroke: var(--accent);
+  stroke-width: 1.8;
+  opacity: 1;
+}
+.node[data-thread="true"] .box {
+  stroke: var(--accent);
+  stroke-width: 1.2;
+}
+
+/* ---- story preface: who is in it, and the words it uses ---------------- */
+
+.preface {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 1px;
+  background: var(--rule);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  overflow: hidden;
+  margin-bottom: 34px;
+}
+.preface__col {
+  background: var(--ink-050);
+  padding: 16px 20px;
+}
+.preface__col--wide {
+  grid-column: 1 / -1;
+}
+@media (max-width: 900px) {
+  .preface {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}
+.preface__person {
+  padding: 5px 0;
+  min-width: 0;
+}
+.preface__person a {
+  color: var(--text-000);
+  font-size: 13.5px;
+  white-space: nowrap;
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+}
+.preface__person a:hover {
+  color: var(--accent);
+}
+.preface__rel {
+  display: block;
+  margin-left: 14px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-200);
+}
+.preface dl {
+  margin: 4px 0 0;
+}
+.preface dt {
+  display: inline;
+  font-family: var(--serif);
+  font-style: italic;
+  font-size: 13.5px;
+  color: var(--text-000);
+}
+.preface dd {
+  display: inline;
+  margin: 0 0 0 6px;
+  font-size: 12.5px;
+  color: var(--text-200);
+}
+.preface dd::after {
+  content: "";
+  display: block;
+  height: 5px;
+}
+
+/* ---- record block: a full transcription behind its title --------------- */
+
+.recordblock {
+  margin: 26px 0 0;
+  background: var(--ink-050);
+  border: 1px solid var(--rule);
+  border-left: 2px solid var(--accent);
+  border-radius: var(--r);
+}
+.recordblock summary {
+  cursor: pointer;
+  list-style: none;
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 14px;
+  padding: 15px 20px;
+}
+.recordblock summary::-webkit-details-marker {
+  display: none;
+}
+.recordblock summary::before {
+  content: "+";
+  color: var(--accent);
+  font-family: var(--mono);
+  margin-right: 2px;
+}
+.recordblock[open] summary::before {
+  content: "\2212";
+}
+.recordblock__title {
+  color: var(--text-000);
+  font-size: 14px;
+  flex: 1;
+}
+.recordblock__kind {
+  color: var(--text-300);
+  font-size: 12px;
+  white-space: nowrap;
+}
+.recordblock__body {
+  padding: 4px 22px 18px;
+  border-top: 1px solid var(--rule);
+}
+.recordblock__body p {
+  font-family: var(--serif);
+  font-size: 16.5px;
+  line-height: 1.65;
+  color: var(--text-100);
+  margin: 14px 0 0;
+}
+.recordblock__foot {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+  margin-top: 18px;
+  padding-top: 12px;
+  border-top: 1px solid var(--rule);
+}
+.recordblock__source {
+  color: var(--text-300);
+  font-size: 12px;
+}
+.recordblock__people {
+  display: flex;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+/* ---- archive strip: rights-documented images, honesty-labeled ---------- */
+
+.archive {
+  margin-top: 40px;
+}
+.archive__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 18px;
+  margin-top: 20px;
+}
+.archive__fig {
+  margin: 0;
+  background: var(--ink-050);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  overflow: hidden;
+}
+/* The image is the button, so the button has to disappear: the figure
+   already carries the border and the rounding. */
+.archive__fig button,
+.film__portraits button {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 0;
+  background: none;
+  cursor: zoom-in;
+  line-height: 0;
+}
+.archive__fig button:hover img,
+.film__portraits button:hover img {
+  filter: saturate(1);
+}
+
+.archive__fig img {
+  display: block;
+  width: 100%;
+  height: 170px;
+  object-fit: cover;
+  filter: saturate(0.88);
+}
+.archive__fig[data-kind="context"] img {
+  filter: saturate(0.6) contrast(0.96);
+}
+.archive__fig figcaption {
+  padding: 10px 13px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+.archive__badge {
+  font-size: 10px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+.archive__badge[data-kind="context"] {
+  color: var(--text-300);
+}
+.archive__caption {
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-100);
+}
+.archive__meta {
+  font-size: 11.5px;
+  color: var(--text-300);
+}
+
+/* ---- AI image honesty ------------------------------------------------- */
+
+.archive__fig[data-kind="ai-generated"] {
+  border-style: dashed;
+}
+.archive__fig[data-kind="ai-generated"] img {
+  filter: saturate(0.8);
+}
+.archive__badge[data-kind="ai-generated"],
+.archive__badge[data-kind="ai-enhanced"] {
+  color: var(--line-d);
+}
+.archive__disclaimer {
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--text-200);
+  font-style: italic;
+}
+.archive__evidence summary {
+  cursor: pointer;
+  font-size: 11.5px;
+  color: var(--accent);
+  list-style: none;
+}
+.archive__evidence summary::before {
+  content: "+ ";
+  font-family: var(--mono);
+}
+.archive__evidence[open] summary::before {
+  content: "\2212 ";
+}
+.archive__evidence ul {
+  margin: 6px 0 0;
+  padding-left: 16px;
+  font-size: 11.5px;
+  color: var(--text-200);
+}
+.archive__evidence li {
+  margin-bottom: 3px;
+}
+
+/* ---- cast ledger ------------------------------------------------------ */
+
+.castledger {
+  margin-top: 40px;
+}
+.castledger table {
+  width: 100%;
+  margin-top: 18px;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+.castledger th {
+  text-align: left;
+  font-size: 11px;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--text-300);
+  padding: 0 14px 8px 0;
+  border-bottom: 1px solid var(--rule-strong);
+}
+.castledger td {
+  padding: 8px 14px 8px 0;
+  border-bottom: 1px solid var(--rule);
+  color: var(--text-200);
+  vertical-align: baseline;
+}
+.castledger td a {
+  color: var(--text-000);
+  display: inline-flex;
+  align-items: center;
+  gap: 7px;
+  white-space: nowrap;
+}
+.castledger td a:hover {
+  color: var(--accent);
+}
+
+/* Numbered evidence: the house style cites every factual claim, so the
+   marker has to stay out of the way of the sentence and still be a real
+   target to hit. The section it jumps to reads as a source list, not as
+   prose, and each line ends with its grade. */
+.prose sup a[data-footnote-ref] {
+  color: var(--accent);
+  font-size: 10px;
+  font-weight: 500;
+  padding: 0 1px 0 2px;
+  border: 0;
+  text-decoration: none;
+}
+.prose sup a[data-footnote-ref]:hover {
+  color: var(--text-000);
+  background: var(--ink-100);
+}
+.prose .footnotes {
+  margin-top: 44px;
+  padding-top: 4px;
+  border-top: 1px solid var(--rule-strong);
+  font-family: var(--sans);
+  font-size: 12.5px;
+  line-height: 1.65;
+  color: var(--text-200);
+}
+.prose .footnotes h2 {
+  font-family: var(--sans);
+  font-size: 11px;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  font-weight: 500;
+  color: var(--text-300);
+  margin: 18px 0 14px;
+}
+.prose .footnotes ol {
+  padding-left: 20px;
+  display: grid;
+  gap: 10px;
+}
+.prose .footnotes li {
+  padding-left: 4px;
+}
+.prose .footnotes li::marker {
+  color: var(--text-300);
+  font-size: 11px;
+}
+.prose .footnotes li p {
+  margin: 0;
+  font-size: 12.5px;
+  line-height: 1.65;
+}
+.prose .footnotes a[data-footnote-backref] {
+  color: var(--text-400);
+  margin-left: 4px;
+  text-decoration: none;
+}
+.prose .footnotes a[data-footnote-backref]:hover {
+  color: var(--accent);
+}
+/* The living-relative note. Deliberately quiet: it is a standing
+   condition of this build, not a warning to act on. */
+.localonly {
+  margin: 0 0 22px;
+  padding: 11px 14px;
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: var(--text-200);
+  background: var(--ink-050);
+  border: 1px solid var(--rule);
+  border-left: 2px solid var(--line-d);
+}
+.localonly strong {
+  color: var(--text-000);
+  font-weight: 500;
+}
+
+.prose .footnotes li.is-target {
+  background: var(--ink-100);
+  box-shadow: -10px 0 0 var(--ink-100), 10px 0 0 var(--ink-100);
+}
+
+/* A face, when the archive has one. Cycle 055 searched the whole tree and
+   found a single registered likeness, so this block is rare by nature and
+   is sized to be looked at rather than skimmed past. */
+.personface {
+  margin: 0 0 16px;
+  max-width: 220px;
+}
+.personface button {
+  display: block;
+  width: 100%;
+  padding: 0;
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--r);
+  background: var(--ink-050);
+  cursor: zoom-in;
+  line-height: 0;
+  overflow: hidden;
+}
+.personface button:hover {
+  border-color: var(--accent-dim);
+}
+.personface img {
+  display: block;
+  width: 100%;
+  height: auto;
+}
+.personface figcaption {
+  margin-top: 6px;
+  font-size: 11.5px;
+  line-height: 1.5;
+  color: var(--text-300);
+}
+
+/* ---- gallery: the whole picture archive as a collection ---------------- */
+
+.gallery {
+  max-width: var(--wide, 1180px);
+  margin: 0 auto;
+  padding: 0 28px 80px;
+}
+.gallery__lede {
+  max-width: 68ch;
+  font-size: 13.5px;
+  line-height: 1.6;
+  margin: 14px 0 22px;
+}
+.gallery__bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--rule);
+}
+.gallery__kinds {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+.gallery__search {
+  flex: 1 1 260px;
+  min-width: 200px;
+}
+.gallery__sort {
+  background: var(--ink-050);
+  color: var(--text-100);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  padding: 6px 8px;
+  font-size: 12px;
+  font-family: inherit;
+}
+.gallery__count {
+  font-family: var(--mono);
+  font-size: 11px;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  margin: 14px 0 6px;
+}
+.gallery__grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 18px;
+  margin-top: 8px;
+}
+.gallery__grid .archive__fig img {
+  height: 200px;
+  object-fit: cover;
+  background: var(--ink-100);
+}
+.gallery__links {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+  margin-top: 7px;
+}
+
+/* ---- atlas: the browser beside the map ---------------------------------- */
+
+/* The atlas head can run tall now that it carries two filter groups, so it
+   scrolls inside itself rather than growing off the bottom of the window
+   and taking the last two lines with it. */
+/* The controls are a panel, not text floating on a map. Sixteen filter
+   chips and their counts came to 992px inside a 610px window, so the old
+   head grew a scrollbar hanging in mid-air over the Atlantic. A panel can
+   scroll; a caption cannot. */
+.atlas__panel {
+  position: absolute;
+  left: 24px;
+  top: 24px;
+  bottom: 136px;
+  z-index: 10;
+  width: 336px;
+  display: flex;
+  flex-direction: column;
+  background: var(--ink-100);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  overflow: hidden;
+  box-shadow: inset 3px 0 0 color-mix(in srgb, var(--accent) 52%, var(--ink-100));
+}
+.atlas__panelhead {
+  flex: none;
+  padding: 13px 14px 12px 17px;
+  border-bottom: 1px solid var(--rule);
+}
+.atlas__tally {
+  font-size: 12px;
+  color: var(--text-300);
+}
+.atlas__tally b {
+  font-family: var(--mono);
+  font-weight: 500;
+  color: var(--text-000);
+}
+.atlas__note {
+  font-size: 11px;
+  line-height: 1.45;
+}
+.atlas__note:empty {
+  display: none;
+}
+/* The place you have narrowed to, and the way back out of it. */
+.atlas__crumb {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  width: 100%;
+  margin-top: 9px;
+  padding: 4px 9px;
+  font: inherit;
+  font-size: 11.5px;
+  text-align: left;
+  color: var(--text-000);
+  background: var(--ink-150);
+  border: 1px solid var(--rule-strong);
+  border-radius: var(--r);
+  cursor: pointer;
+}
+.atlas__crumb span {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.atlas__crumb em {
+  font-style: normal;
+  font-size: 10.5px;
+  color: var(--text-400);
+}
+.atlas__crumb:hover em {
+  color: var(--text-000);
+}
+/* No scrollbar in either panel, and no need for one in this one. Ethan,
+   2026-08-22: "remove scrollbars remove need on the atlas and just
+   scrollbarliss scrolling on pictures." The need went with the density
+   pass below — nine event kinds and nine lines now cost ten rows between
+   them — and the bar itself goes here, in both engines. Scrolling still
+   works; it just does not draw furniture over a map. */
+.atlas__filters {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  padding: 0 14px 14px;
+  scrollbar-width: none;
+}
+.atlas__filters::-webkit-scrollbar,
+.atlas__rows::-webkit-scrollbar {
+  display: none;
+}
+.atlas__group {
+  margin-top: 12px;
+  padding-top: 9px;
+  border-top: 1px solid var(--rule);
+}
+.atlas__group:first-child {
+  margin-top: 12px;
+  padding-top: 0;
+  border-top: 0;
+}
+.atlas__grouphead {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-400);
+}
+.atlas__grouphead span {
+  flex: 1;
+}
+.atlas__mini {
+  padding: 1px 7px;
+  font: inherit;
+  font-size: 10.5px;
+  letter-spacing: 0.04em;
+  color: var(--text-300);
+  background: none;
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  cursor: pointer;
+}
+.atlas__mini:hover {
+  color: var(--text-000);
+  border-color: var(--rule-strong);
+}
+.atlas__mini[aria-pressed="true"] {
+  color: var(--text-000);
+  background: var(--ink-150);
+  border-color: var(--rule-strong);
+}
+/* The count is the answer to "how many would I get", so it sits at the far
+   end of the chip in mono and does not fight the label for the eye. */
+.atlas__count {
+  margin-left: auto;
+  padding-left: 8px;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-style: normal;
+  color: var(--text-400);
+}
+/* Nine kinds of event in two columns rather than nine full-width rows:
+   the label is two words and the chip was carrying two hundred pixels of
+   nothing. */
+.atlas__legend--shapes {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 4px;
+  margin-top: 8px;
+  padding-top: 0;
+  border-top: 0;
+}
+.atlas__legend--shapes .atlas__key {
+  gap: 6px;
+  padding: 2px 7px;
+  min-width: 0;
+}
+.atlas__legend--shapes .atlas__key span {
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.atlas__legend--branches .atlas__key {
+  width: 100%;
+  min-width: 0;
+}
+/* At half a panel wide the count cannot sit beside the label, so it sits
+   at the end of the quiet line under it. */
+.atlas__legend--branches .atlas__count {
+  padding-left: 8px;
+  align-self: end;
+}
+
+/* The list holds exactly what the map holds. It is on the right because
+   the panel is on the left and the globe should keep the middle. */
+.atlas__list {
+  position: absolute;
+  right: 24px;
+  top: 24px;
+  bottom: 136px;
+  z-index: 10;
+  width: 340px;
+  display: flex;
+  flex-direction: column;
+  background: var(--ink-100);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  overflow: hidden;
+  box-shadow: inset 0 3px 0 color-mix(in srgb, var(--accent) 52%, var(--ink-100));
+}
+.atlas__listhead {
+  padding: 12px 10px 10px;
+  border-bottom: 1px solid var(--rule);
+}
+/* Two questions of one pile: what happened, and where it kept happening. */
+.atlas__tabs {
+  display: flex;
+  gap: 2px;
+  margin-bottom: 9px;
+  padding: 2px;
+  background: var(--ink-150);
+  border-radius: var(--r);
+}
+.atlas__tab {
+  flex: 1;
+  padding: 3px 6px;
+  font: inherit;
+  font-size: 11px;
+  white-space: nowrap;
+  color: var(--text-300);
+  background: none;
+  border: 0;
+  border-radius: calc(var(--r) - 1px);
+  cursor: pointer;
+}
+.atlas__tab em {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 10px;
+  color: var(--text-400);
+  margin-left: 4px;
+}
+.atlas__tab:hover {
+  color: var(--text-000);
+}
+.atlas__tab[aria-pressed="true"] {
+  color: var(--text-000);
+  background: var(--ink-200);
+}
+.atlas__search {
+  width: 100%;
+  padding: 5px 8px;
+  font: inherit;
+  font-size: 12px;
+  color: var(--text-000);
+  background: var(--ink-150);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+}
+.atlas__search:focus {
+  outline: none;
+  border-color: var(--rule-strong);
+}
+/* The lists are bound to the map, so the panel says so and gives you the
+   switch. Without it, panning quietly changes the answer and nothing on
+   screen admits that panning was a filter. */
+.atlas__scope {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  width: 100%;
+  margin-top: 8px;
+  padding: 3px 8px;
+  font: inherit;
+  font-size: 11px;
+  text-align: left;
+  color: var(--text-300);
+  background: none;
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  cursor: pointer;
+}
+.atlas__scope span {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.atlas__scope em {
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 10px;
+  color: var(--text-400);
+}
+.atlas__scope:hover {
+  color: var(--text-000);
+  border-color: var(--rule-strong);
+}
+.atlas__scope[aria-pressed="true"] {
+  color: var(--text-000);
+  background: var(--ink-150);
+  border-color: var(--rule-strong);
+}
+.atlas__scope[aria-pressed="true"] .atlas__check {
+  background: var(--accent);
+  border-color: var(--accent);
+}
+.atlas__sorts {
+  display: flex;
+  gap: 5px;
+  margin-top: 8px;
+}
+.atlas__rows {
+  flex: 1;
+  overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+}
+/* Fixed, and matching ROW_H in AtlasPage: the list builds only the rows in
+   view, and the two spacers around them are measured in this number. */
+.atlas__row {
+  display: flex;
+  align-items: stretch;
+  height: 46px;
+  border-bottom: 1px solid var(--rule);
+}
+.atlas__row:hover {
+  background: var(--ink-150);
+}
+.atlas__row--on {
+  background: var(--ink-150);
+  box-shadow: inset 2px 0 0 var(--accent);
+}
+.atlas__rowmain {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  min-width: 0;
+  padding: 7px 4px 7px 10px;
+  font: inherit;
+  text-align: left;
+  color: inherit;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.atlas__rowyear {
+  flex: none;
+  /* Fixed width so a dated row and an undated one line their names up:
+     "1846" and "—" are not the same number of characters. */
+  width: 30px;
+  font-family: var(--mono);
+  font-size: 11px;
+  color: var(--text-300);
+}
+/* How many records a place holds, which is the whole reason the place list
+   is sorted the way it is. */
+.atlas__rowcount {
+  flex: none;
+  width: 30px;
+  font-family: var(--mono);
+  font-size: 12px;
+  color: var(--text-000);
+  text-align: right;
+}
+.atlas__rowname {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+}
+.atlas__rowname b {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--text-000);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.atlas__rowname em {
+  font-size: 10.5px;
+  font-style: normal;
+  color: var(--text-400);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.atlas__rowgo {
+  flex: none;
+  width: 30px;
+  font: inherit;
+  font-size: 12px;
+  color: var(--text-400);
+  background: none;
+  border: 0;
+  border-left: 1px solid var(--rule);
+  cursor: pointer;
+}
+.atlas__rowgo:hover {
+  color: var(--text-000);
+  background: var(--ink-200);
+}
+/* The ancestral lines tab. A group header is a row like any other, because
+   the list only builds the rows it can see and that costs one fixed row
+   height — so this is 46px tall too, and earns it by carrying the line's
+   colour, its name and how many of its people are on screen. */
+.atlas__linehead {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  height: 46px;
+  padding: 0 10px;
+  background: var(--ink-150);
+  border-bottom: 1px solid var(--rule);
+}
+.atlas__linehead span {
+  flex: 1;
+  min-width: 0;
+  display: grid;
+}
+.atlas__linehead b {
+  font-size: 11px;
+  font-weight: 550;
+  letter-spacing: 0.03em;
+  text-transform: uppercase;
+  color: var(--text-000);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.atlas__linehead em {
+  font-size: 10.5px;
+  font-style: normal;
+  color: var(--text-400);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+/* How many moves the person's whole record holds. It is not a count of
+   what is on screen, so it stays quiet and says so on hover. */
+.atlas__rowmoves {
+  flex: none;
+  padding-left: 6px;
+  white-space: nowrap;
+  font-family: var(--mono);
+  font-size: 10.5px;
+  font-style: normal;
+  color: var(--text-400);
+}
+.atlas__lineshead {
+  margin-top: 8px;
+  font-size: 10.5px;
+  line-height: 1.45;
+}
+.atlas__empty {
+  padding: 14px 12px;
+  font-size: 11.5px;
+  line-height: 1.6;
+}
+
+/* The archive, in the same panel as the events and the places, because a
+   picture of a place is another way of answering "what is here" and
+   deserves no new furniture of its own. Two to a row: small enough to
+   scan, large enough to tell a meetinghouse from a map. */
+.atlas__picshead {
+  position: sticky;
+  top: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 10px 6px;
+  font-size: 10.5px;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--text-400);
+  background: var(--ink-100);
+  border-bottom: 1px solid var(--rule);
+}
+.atlas__picshead span {
+  flex: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.atlas__picshead em {
+  font-family: var(--mono);
+  font-style: normal;
+  letter-spacing: 0;
+}
+.atlas__pics {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  padding: 8px;
+}
+.atlas__pic {
+  position: relative;
+  display: grid;
+  gap: 4px;
+  margin: 0;
+  content-visibility: auto;
+  contain-intrinsic-size: 0 142px;
+}
+.atlas__picgo {
+  display: block;
+  padding: 0;
+  background: var(--ink-200);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  cursor: pointer;
+  overflow: hidden;
+}
+.atlas__picgo img {
+  display: block;
+  width: 100%;
+  aspect-ratio: 4 / 3;
+  object-fit: cover;
+  opacity: 0.92;
+}
+.atlas__picprogress {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 10px;
+  font-family: var(--mono);
+  font-size: 10px;
+  color: var(--text-400);
+  border-top: 1px solid var(--rule);
+}
+.atlas__picprogress i {
+  width: 5px;
+  height: 5px;
+  background: var(--accent);
+  border-radius: 50%;
+}
+.atlas__picgo:hover {
+  border-color: var(--rule-strong);
+}
+.atlas__picgo:hover img {
+  opacity: 1;
+}
+/* Full size is a second question, so it is a second target: the picture
+   itself goes to the place, this goes to the picture and its provenance. */
+.atlas__picopen {
+  position: absolute;
+  right: 4px;
+  top: 4px;
+  width: 20px;
+  height: 20px;
+  font-size: 11px;
+  line-height: 1;
+  color: var(--text-200);
+  background: color-mix(in srgb, var(--ink-050) 78%, transparent);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  cursor: pointer;
+}
+.atlas__picopen:hover {
+  color: var(--text-000);
+  border-color: var(--rule-strong);
+}
+/* How many more pages of the same document are folded behind this one. */
+.atlas__picmore {
+  position: absolute;
+  left: 4px;
+  top: 4px;
+  height: 20px;
+  padding: 0 6px;
+  font: inherit;
+  font-family: var(--mono);
+  font-size: 10px;
+  line-height: 1;
+  color: var(--text-200);
+  background: color-mix(in srgb, var(--ink-050) 78%, transparent);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+  cursor: pointer;
+}
+.atlas__picmore:hover {
+  color: var(--text-000);
+  border-color: var(--rule-strong);
+}
+.atlas__pic figcaption {
+  display: grid;
+  gap: 2px;
+}
+.atlas__pic figcaption b {
+  font-size: 10.5px;
+  font-weight: 500;
+  color: var(--text-200);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.atlas__pic figcaption em {
+  font-size: 9.5px;
+  font-style: normal;
+  line-height: 1.35;
+}
+.atlas__pic figcaption em.archive__badge {
+  justify-self: start;
+}
+/* The count of lines the paths toggle is drawing, said out loud so the
+   switch is not a switch with no visible effect at country zoom. */
+.atlas__pathcount {
+  margin-left: 6px;
+  font-family: var(--mono);
+  font-style: normal;
+  font-size: 10.5px;
+  color: var(--text-400);
+}
+
+/* The record's own shape in time, sitting on the scrubber that reads it.
+   A slider over a range with nothing in half of it is a slider that hides
+   where the family actually is: nine tenths of these events fall after
+   1750, and the strip says so before you drag anything. */
+/* Taller and more solid than the first pass, on Ethan's read of it
+   (2026-08-22): "a bit more opacity for timeline bar chart and a bit
+   taller". A distribution you have to squint at is decoration. */
+.atlas__hist {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 57px;
+  z-index: 19;
+  display: flex;
+  align-items: flex-end;
+  gap: 1px;
+  height: 64px;
+  padding: 0 24px 4px;
+  background: var(--ink-050);
+  border-top: 1px solid var(--rule);
+}
+.atlas__bin {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  height: 100%;
+  padding: 0;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.atlas__bin i {
+  display: block;
+  width: 100%;
+  background: var(--text-300);
+  opacity: 0.8;
+  border-radius: 1px 1px 0 0;
+}
+.atlas__bin--on i {
+  background: var(--accent);
+  opacity: 1;
+}
+.atlas__bin:hover i {
+  background: var(--text-200);
+}
+.atlas__scale {
+  font-size: 11.5px;
+}
+
+/* ---- the migration tab's two modes -------------------------------------- */
+
+.mapmodes {
+  position: absolute;
+  left: 50%;
+  top: 22px;
+  z-index: 12;
+  display: flex;
+  gap: 2px;
+  transform: translateX(-50%);
+  padding: 2px;
+  background: color-mix(in srgb, var(--ink-100) 86%, transparent);
+  border: 1px solid var(--rule);
+  border-radius: var(--r);
+}
+.mapmodes__tab {
+  padding: 4px 12px;
+  font-size: 11.5px;
+  color: var(--text-300);
+  border-radius: calc(var(--r) - 1px);
+  text-decoration: none;
+}
+.mapmodes__tab:hover {
+  color: var(--text-000);
+}
+.mapmodes__tab[aria-current="page"] {
+  color: var(--text-000);
+  background: var(--ink-200);
+}
+
+/* The basemap credit, which every map surface owes and none of them should
+   spend a line of layout on. */
+.film__credit {
+  position: absolute;
+  right: 10px;
+  bottom: 6px;
+  z-index: 10;
+  max-width: 300px;
+  font-size: 9.5px;
+  line-height: 1.5;
+  text-align: right;
+}
+
+/* ---------- no packet ---------- */
+/* The screen the program shows with nothing loaded. Plain, because it is
+   read once by someone who has just unzipped an email attachment. */
+.nopacket {
+  max-width: 56ch;
+  margin: 18vh auto 0;
+  padding: 0 24px;
+}
+.nopacket h1 {
+  font-family: var(--serif);
+  font-size: 32px;
+  margin: 8px 0 16px;
+}
+.nopacket p,
+.nopacket li {
+  font-size: 14.5px;
+  line-height: 1.55;
+  color: var(--text-100);
+}
+.nopacket ol {
+  padding-left: 22px;
+  margin: 12px 0 20px;
+}
+.nopacket code {
+  font-family: var(--mono);
+  font-size: 12.5px;
+  background: var(--ink-050);
+  border: 1px solid var(--rule);
+  padding: 1px 5px;
+  border-radius: 3px;
+}

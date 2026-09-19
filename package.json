@@ -1,0 +1,32 @@
+{
+  "name": "family-atlas",
+  "private": false,
+  "version": "0.1.0",
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc --noEmit && vite build",
+    "preview": "vite preview",
+    "test": "tsc --noEmit",
+    "basemap": "node scripts/build_basemap.mjs"
+  },
+  "dependencies": {
+    "maplibre-gl": "^6.3.0",
+    "pmtiles": "^4.5.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8",
+    "react-markdown": "^10.1.0",
+    "react-router-dom": "^7.18.2",
+    "remark-gfm": "^4.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^26.2.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "@vitejs/plugin-react": "^6.0.5",
+    "typescript": "^7.0.2",
+    "vite": "^8.2.1"
+  },
+  "description": "A story-first viewer for a family history: chronicle, migration film, atlas, tree. Loads a packet; holds no family of its own.",
+  "license": "MIT"
+}
