@@ -1082,7 +1082,7 @@ button {
   background: #080a0c;
 }
 
-.film__map {
+.film .film__map {
   position: absolute;
   inset: 0;
 }

@@ -19,7 +19,6 @@ import { Link, useSearchParams } from "react-router-dom";
 import { Map as MLMap, addProtocol, removeProtocol, type GeoJSONSource } from "maplibre-gl";
 import { Protocol } from "pmtiles";
 import type { Feature } from "geojson";
-import "maplibre-gl/dist/maplibre-gl.css";
 import {
   ATTRIBUTION,
   arcLine,

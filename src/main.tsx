@@ -1,5 +1,6 @@
 import { createRoot } from "react-dom/client";
 import { loadPacket, PACKET_BASE, type PacketStatus } from "@/lib/packet";
+import "maplibre-gl/dist/maplibre-gl.css";
 import "@/styles.css";
 
 // Hash routing: the app is opened from the filesystem or a throwaway

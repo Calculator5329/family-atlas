@@ -31,7 +31,6 @@ import {
 } from "maplibre-gl";
 import { Protocol } from "pmtiles";
 import type { Feature, FeatureCollection } from "geojson";
-import "maplibre-gl/dist/maplibre-gl.css";
 import { buildStyle } from "@/lib/mapstyle";
 import { ATTRIBUTION, arcLine, greatCircle } from "@/lib/camera";
 import { branches, useAnchor } from "@/lib/kinship";
