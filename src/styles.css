@@ -3032,6 +3032,28 @@ button {
   text-align: right;
 }
 
+/* The sentence the map surfaces show when the basemap files have never
+   been built. Fixed under the top bar so it sits over any map layout
+   without taking a line from it. */
+.basemap-notice {
+  position: fixed;
+  top: 52px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 30;
+  max-width: 62ch;
+  padding: 8px 14px;
+  font-size: 12.5px;
+  line-height: 1.5;
+  color: var(--text-000);
+  background: var(--ink-200);
+  border: 1px solid var(--rule-strong);
+}
+.basemap-notice code {
+  font-family: var(--mono, ui-monospace, monospace);
+  font-size: 12px;
+}
+
 /* ---------- no packet ---------- */
 /* The screen the program shows with nothing loaded. Plain, because it is
    read once by someone who has just unzipped an email attachment. */

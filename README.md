@@ -22,8 +22,10 @@ Without a packet the page says so and tells you where it looked.
 The map surfaces (Migration, Atlas) also need basemap tiles, which are not
 in the packet because they are large and not the family's. Build them once
 with `npm run basemap`; it reads `public/packet/basemap.json` to know which
-regions the packet expects and downloads the rest. Everything else works
-without them.
+regions the packet expects and downloads the rest, about 275 MB. The first
+run installs the `go-pmtiles` extractor, so it needs Go on your PATH once
+(https://go.dev/dl). Everything else works without the tiles, and the map
+pages say so until they exist.
 
 ## Building a packet
 

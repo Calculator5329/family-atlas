@@ -12,16 +12,24 @@ import AtlasPage from "@/routes/AtlasPage";
 import GalleryPage from "@/routes/GalleryPage";
 import PlacePage from "@/routes/PlacePage";
 import NotFound from "@/routes/NotFound";
+import BasemapNotice from "@/components/BasemapNotice";
 
 /** The migration tab holds both moving pictures: the scripted film and
  *  the sequence that flies every recorded journey. ?person= is the film's
  *  own third mode and stays with it. */
 function MapSurface() {
   const [params] = useSearchParams();
-  return params.get("mode") === "journeys" && !params.get("person") ? (
-    <JourneysPage />
-  ) : (
-    <FilmPage />
+  const surface =
+    params.get("mode") === "journeys" && !params.get("person") ? (
+      <JourneysPage />
+    ) : (
+      <FilmPage />
+    );
+  return (
+    <>
+      <BasemapNotice />
+      {surface}
+    </>
   );
 }
 
@@ -46,7 +54,15 @@ export default function App() {
           <Route path="/tree" element={<TreePage />} />
           <Route path="/lines" element={<LinesPage />} />
           <Route path="/map" element={<MapSurface />} />
-          <Route path="/atlas" element={<AtlasPage />} />
+          <Route
+            path="/atlas"
+            element={
+              <>
+                <BasemapNotice />
+                <AtlasPage />
+              </>
+            }
+          />
           <Route path="/gallery" element={<GalleryPage />} />
           <Route path="/place/:id" element={<PlacePage />} />
           <Route path="*" element={<NotFound />} />
