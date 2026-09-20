@@ -48,8 +48,12 @@ export interface Person {
   altNames?: PersonName[];
   living: boolean;
   sex?: string;
+  /** Parent families, the one the chart leads with first. */
   famc: string[];
   fams: string[];
+  /** What kind of link a parent family is ("step", "birth", or a ruling's
+   *  label such as "believed birth father"), keyed by family id. */
+  parentLinks?: Record<string, string>;
   /** Absent on fenced (living) people. */
   events?: EventRec[];
   birth?: EventRec;

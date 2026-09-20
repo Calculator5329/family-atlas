@@ -289,10 +289,10 @@ export default function TreePage() {
               </div>
             )}
 
-            {rel && rel.parents.length > 0 && (
+            {rel && rel.primaryParents.length > 0 && (
               <div className="railbox" style={{ marginBottom: 14 }}>
                 <h3>Parents</h3>
-                {rel.parents.map((id) => (
+                {rel.primaryParents.map((id) => (
                   <button
                     key={id}
                     className="relrow"
@@ -301,6 +301,23 @@ export default function TreePage() {
                   >
                     <span>{displayName(getPerson(id))}</span>
                     <small>{getPerson(id) ? lifespan(getPerson(id)!) : ""}</small>
+                  </button>
+                ))}
+              </div>
+            )}
+
+            {rel && rel.otherParents.length > 0 && (
+              <div className="railbox" style={{ marginBottom: 14 }}>
+                <h3>Also</h3>
+                {rel.otherParents.map((o) => (
+                  <button
+                    key={o.id}
+                    className="relrow"
+                    style={{ width: "100%", textAlign: "left" }}
+                    onClick={() => setSelected(o.id)}
+                  >
+                    <span>{displayName(getPerson(o.id))}</span>
+                    <small>{o.label ?? (getPerson(o.id) ? lifespan(getPerson(o.id)!) : "")}</small>
                   </button>
                 ))}
               </div>

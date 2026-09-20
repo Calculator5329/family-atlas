@@ -55,9 +55,12 @@ interface Raw {
   truncated: boolean;
 }
 
+/** Upward, the chart follows each person's first family only: a second
+ *  parent link (a step or believed birth parent) is reachable from the
+ *  person's page, not drawn as a second father above them. */
 function kinOf(id: string, dir: Direction): string[] {
   const rel = relationsOf(id);
-  return dir === "ancestors" ? rel.parents : rel.children;
+  return dir === "ancestors" ? rel.primaryParents : rel.children;
 }
 
 export function buildLayout(

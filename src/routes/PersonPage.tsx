@@ -346,11 +346,20 @@ export default function PersonPage() {
             </div>
           )}
 
-          {rel.parents.length > 0 && (
+          {rel.primaryParents.length > 0 && (
             <div className="railbox">
               <h3>Parents</h3>
-              {rel.parents.map((pid) => (
+              {rel.primaryParents.map((pid) => (
                 <PersonLink key={pid} id={pid} />
+              ))}
+            </div>
+          )}
+
+          {rel.otherParents.length > 0 && (
+            <div className="railbox">
+              <h3>Also</h3>
+              {rel.otherParents.map((o) => (
+                <PersonLink key={o.id} id={o.id} note={o.label} />
               ))}
             </div>
           )}

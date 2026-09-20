@@ -113,7 +113,14 @@ export function getPlace(id?: string | null): Place | undefined {
 // ---------- relationship indexes ----------
 
 export interface Relations {
+  /** Every recorded parent, first family first. Kinship and the lineage
+   *  walk follow all of them. */
   parents: string[];
+  /** The parents in the person's first family: what the chart draws and
+   *  the Parents box leads with. */
+  primaryParents: string[];
+  /** Parents from any further family, with the link's label if it has one. */
+  otherParents: { id: string; label?: string }[];
   children: string[];
   spouses: { id: string; family: Family }[];
   siblings: string[];
@@ -126,19 +133,24 @@ export function relationsOf(id: string): Relations {
   if (cached) return cached;
 
   const p = people[id];
-  const rel: Relations = { parents: [], children: [], spouses: [], siblings: [] };
+  const rel: Relations = {
+    parents: [], primaryParents: [], otherParents: [], children: [], spouses: [], siblings: [],
+  };
   if (!p) return rel;
 
-  for (const fid of p.famc) {
+  p.famc.forEach((fid, i) => {
     const f = families[fid];
-    if (!f) continue;
+    if (!f) return;
     for (const parent of [f.husband, f.wife]) {
-      if (parent && !rel.parents.includes(parent)) rel.parents.push(parent);
+      if (!parent || rel.parents.includes(parent)) continue;
+      rel.parents.push(parent);
+      if (i === 0) rel.primaryParents.push(parent);
+      else rel.otherParents.push({ id: parent, label: p.parentLinks?.[fid] });
     }
     for (const c of f.children) {
       if (c !== id && !rel.siblings.includes(c)) rel.siblings.push(c);
     }
-  }
+  });
 
   for (const fid of p.fams) {
     const f = families[fid];
